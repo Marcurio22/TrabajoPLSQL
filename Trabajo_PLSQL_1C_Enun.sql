@@ -9,7 +9,7 @@ DROP SEQUENCE seq_pedidos;
 --Betisbetis
 -- Creación de tablas y secuencias
 
-
+-- kjdskahka
 
 create sequence seq_pedidos;
 
