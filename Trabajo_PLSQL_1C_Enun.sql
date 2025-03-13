@@ -8,6 +8,7 @@ DROP SEQUENCE seq_pedidos;
 
 --Betisbetis
 -- Creación de tablas y secuencias
+--Somos los mejores
 
 -- kjdskahka
 
