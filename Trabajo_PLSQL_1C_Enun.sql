@@ -11,6 +11,7 @@ DROP SEQUENCE seq_pedidos;
 --Somos los mejores
 
 -- kjdskahka
+---jhncbcb
 
 create sequence seq_pedidos;
 
