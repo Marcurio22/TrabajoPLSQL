@@ -6,12 +6,7 @@ DROP TABLE clientes CASCADE CONSTRAINTS;
 
 DROP SEQUENCE seq_pedidos;
 
---Betisbetis
 -- Creación de tablas y secuencias
---Somos los mejores
-
--- kjdskahka
----jhncbcb
 
 create sequence seq_pedidos;
 
