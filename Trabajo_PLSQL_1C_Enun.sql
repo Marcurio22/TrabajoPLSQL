@@ -103,7 +103,14 @@ create or replace procedure registrar_pedido(
     INSERT INTO pedidos (id_pedido, id_cliente, id_personal, fecha_pedido, total) 
     VALUES (id_nuevo_pedido, arg_id_cliente, arg_id_personal, SYSDATE, 0);
     
-    
+    -- Insertar los platos en detalle_pedido y calcular el total
+    IF arg_id_primer_plato IS NOT NULL THEN
+        INSERT INTO detalle_pedido (id_pedido, id_plato, cantidad) VALUES (id_nuevo_pedido, arg_id_primer_plato, 1);
+        SELECT precio INTO precio_total_pedido 
+        FROM platos 
+        WHERE id_plato = arg_id_primer_plato
+        FOR UPDATE;
+    END IF;
 end;
 /
 
