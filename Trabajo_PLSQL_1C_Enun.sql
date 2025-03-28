@@ -82,7 +82,11 @@ create or replace procedure registrar_pedido(
             RAISE_APPLICATION_ERROR(-20001, 'Uno de los platos seleccionados no está disponible.');
         END IF;
     END IF;
-    
+ 
+    -- Verificar que al menos un plato ha sido seleccionado
+    IF arg_id_primer_plato IS NULL AND arg_id_segundo_plato IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20002, 'El pedido debe contener al menos un plato.');
+    END IF;   
     
 end;
 /
