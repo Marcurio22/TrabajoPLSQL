@@ -216,6 +216,14 @@ begin
                 DBMS_OUTPUT.PUT_LINE('Caso 1: Pedido correcto - ERROR');
   END;
   
+  -- Caso 2: Pedido sin platos (-20002)
+    BEGIN
+        registrar_pedido(1, 1, NULL, NULL);
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Caso 2: Pedido sin platos - OK');
+    END;
+  
   -- Idem para el resto de casos
 
   /* - Si se realiza un pedido vac´ıo (sin platos) devuelve el error -200002.
