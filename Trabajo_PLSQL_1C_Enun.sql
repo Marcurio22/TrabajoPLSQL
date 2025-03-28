@@ -88,6 +88,16 @@ create or replace procedure registrar_pedido(
         RAISE_APPLICATION_ERROR(-20002, 'El pedido debe contener al menos un plato.');
     END IF;   
     
+     -- Verificar que el personal de servicio no tiene más de 5 pedidos activos
+    SELECT pedidos_activos INTO numeros_pedidos_activos 
+    FROM personal_servicio 
+    WHERE id_personal = arg_id_personal
+    FOR UPDATE;
+    IF numeros_pedidos_activos >= 5 THEN
+        RAISE_APPLICATION_ERROR(-20003, 'El personal de servicio tiene demasiados pedidos.');
+    END IF;
+    
+    
 end;
 /
 
