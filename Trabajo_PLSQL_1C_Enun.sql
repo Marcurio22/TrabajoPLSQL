@@ -58,6 +58,10 @@ create or replace procedure registrar_pedido(
     arg_id_primer_plato INTEGER DEFAULT NULL,
     arg_id_segundo_plato INTEGER DEFAULT NULL
 ) is 
+    id_nuevo_pedido INTEGER;
+    precio_total_pedido DECIMAL(10,2) := 0;
+    numeros_pedidos_activos INTEGER;
+    plato_disponible INTEGER;
  begin
   null; -- sustituye esta línea por tu código
 end;
