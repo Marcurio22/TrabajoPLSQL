@@ -111,6 +111,15 @@ create or replace procedure registrar_pedido(
         WHERE id_plato = arg_id_primer_plato
         FOR UPDATE;
     END IF;
+    
+    IF arg_id_segundo_plato IS NOT NULL THEN
+        INSERT INTO detalle_pedido (id_pedido, id_plato, cantidad) VALUES (id_nuevo_pedido, arg_id_segundo_plato, 1);
+        SELECT precio + precio_total_pedido INTO precio_total_pedido 
+        FROM platos 
+        WHERE id_plato = arg_id_segundo_plato
+        FOR UPDATE;
+    END IF;
+    
 end;
 /
 
