@@ -207,9 +207,14 @@ create or replace procedure test_registrar_pedido is
 begin
 	 
   --caso 1 Pedido correct, se realiza
-  begin
+  BEGIN
     inicializa_test;
-  end;
+    registrar_pedido(1, 1, 1, 2);
+        DBMS_OUTPUT.PUT_LINE('Caso 1: Pedido correcto - OK');
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Caso 1: Pedido correcto - ERROR');
+  END;
   
   -- Idem para el resto de casos
 
