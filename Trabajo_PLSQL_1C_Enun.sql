@@ -73,6 +73,16 @@ create or replace procedure registrar_pedido(
         END IF;
     END IF;
     
+    -- Verificar disponibilidad del segundo plato
+    IF arg_id_segundo_plato IS NOT NULL THEN
+        SELECT disponible INTO plato_disponible 
+        FROM platos 
+        WHERE id_plato = arg_id_segundo_plato;
+        IF plato_disponible = 0 THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Uno de los platos seleccionados no está disponible.');
+        END IF;
+    END IF;
+    
     
 end;
 /
