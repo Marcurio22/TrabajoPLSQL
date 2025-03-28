@@ -97,6 +97,12 @@ create or replace procedure registrar_pedido(
         RAISE_APPLICATION_ERROR(-20003, 'El personal de servicio tiene demasiados pedidos.');
     END IF;
     
+    -- Crear el pedido
+    SELECT seq_pedidos.NEXTVAL INTO id_nuevo_pedido 
+    FROM dual;
+    INSERT INTO pedidos (id_pedido, id_cliente, id_personal, fecha_pedido, total) 
+    VALUES (id_nuevo_pedido, arg_id_cliente, arg_id_personal, SYSDATE, 0);
+    
     
 end;
 /
