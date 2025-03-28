@@ -63,7 +63,17 @@ create or replace procedure registrar_pedido(
     numeros_pedidos_activos INTEGER;
     plato_disponible INTEGER;
  begin
-  null; -- sustituye esta línea por tu código
+     -- Verificar disponibilidad del primer plato
+    IF arg_id_primer_plato IS NOT NULL THEN
+        SELECT disponible INTO plato_disponible 
+        FROM platos 
+        WHERE id_plato = arg_id_primer_plato;
+        IF plato_disponible = 0 THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Uno de los platos seleccionados no está disponible.');
+        END IF;
+    END IF;
+    
+    
 end;
 /
 
