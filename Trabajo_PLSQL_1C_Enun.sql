@@ -120,6 +120,20 @@ create or replace procedure registrar_pedido(
         FOR UPDATE;
     END IF;
     
+    -- Actualizar total del pedido
+    UPDATE pedidos SET total = precio_total_pedido WHERE id_pedido = id_nuevo_pedido;
+
+    -- Actualizar contador de pedidos activos del personal
+    UPDATE personal_servicio SET pedidos_activos = pedidos_activos + 1 WHERE id_personal = arg_id_personal;
+
+    COMMIT;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Uno de los platos seleccionados no existe.');
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+    
 end;
 /
 
