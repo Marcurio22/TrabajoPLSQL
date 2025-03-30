@@ -167,7 +167,21 @@ end;
 --      Para poder implementar este cambio en el código habría que quitar la comprobación de que no haya más de 5 pedidos de manera simultánea, explicada en el apartado 1. 
 --      Esto se debe a que ahora este error lo realizaría la base de datos utilizando el check. 
 --      Además, se debería incluir excepciones para tratar los casos de error del check.
---
+--      Una posible implementación podría ser:
+--      INICIO
+--          INTENTAR
+--              ACTUALIZAR personal_servicio 
+--              INCREMENTAR pedidos_activos EN 1 
+--              DONDE id_personal SEA IGUAL A arg_id_personal        
+--          SI OCURRE EL ERROR ENTONCES
+--              SI SE PRODUCE UN ERROR DE VALIDACIÓN ENTONCES
+--                   LANZAR EL ERROR(-20003)
+--              SINO
+--                    REENVIAR EL ERROR
+--              FIN SI
+--            FIN SI
+--        FIN
+
 -- * P4.5
 -- 
 
