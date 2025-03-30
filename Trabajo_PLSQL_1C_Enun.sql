@@ -158,7 +158,15 @@ end;
 
 -- * P4.3
 --
--- * P4.4
+-- * P4.4 Si modificásemos la tabla de personal_servicio añadiendo CHECK (pedido_activos <=5), ¿Qué implicaciones tendría en tu código? ¿Cómo afectaría en la gestión de excepciones? 
+--      Describe en detalle las modificaciones que deberías hacer en tu código para mejorar tu solución ante esta situación (puedes añadir pseudocódigo). 
+
+--      La función Check, que verifica que el número de pedidos activos sea menor o igual a 5, no es suficiente para garantizar la integridad en concurrencia. 
+--      Porque no tiene en cuenta varias transacciones simultáneas. Esto podría suponer que si dos procesos incrementan la variable pedidos_activos al mismo tiempo, 
+--      ambos entrarían como pedidos activos, incrementando su contador de 4 a 6 en un instante, sin dejarle opción al check de realizar la comprobación previamente.
+--      Para poder implementar este cambio en el código habría que quitar la comprobación de que no haya más de 5 pedidos de manera simultánea, explicada en el apartado 1. 
+--      Esto se debe a que ahora este error lo realizaría la base de datos utilizando el check. 
+--      Además, se debería incluir excepciones para tratar los casos de error del check.
 --
 -- * P4.5
 -- 
