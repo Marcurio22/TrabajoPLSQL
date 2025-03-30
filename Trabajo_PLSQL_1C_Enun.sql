@@ -147,6 +147,7 @@ end;
 --      Para mantener el contador actualizado, después de registrar el pedido actualizamos el contador pedidos_activos.
 
 -- * P4.2 ¿Cómo evitas que dos transacciones concurrentes asignen un pedido al mismo personal de servicio cuyos pedidos activos estan a punto de superar el límite?
+
 --      En nuestro caso hemos elegido el bloqueo pesimista, porque tiene un enfoque que protege mejor la integridad de la base de datos frente a los errores al manejarlos 
 --      directamente en lugar de confiar en que sea improbable que sucedan. 
 --      Para realizar esta implementación hemos añadido un FOR UPDATE en el select evitando así que otro proceso acceda o modifique la misma fila a la vez. Esto nos permite 
@@ -157,6 +158,7 @@ end;
 --      no sea mayor que 5 y antes de lanzar la excepción.
 
 -- * P4.3 Una vez hechas las comprobaciones en los pasos 1 y 2, ¿podrías asegurar que el pedido se puede realizar de manera correcta en el paso 3 y no se generan inconsistencias? 
+
 --      ¿Por qué? Recuerda que trabajamos en entornos con conexiones concurrentes. 
 --      Podemos asegurar que el paso 3 se puede realizar sin inconsistencias, ya que, usamos el bloqueo pesimista como hemos indicado en el apartado anterior. El uso del FOR UPDATE 
 --      nos garantiza que dos transacciones simultáneas no puedan actualizar el contador pedidos_activos a la vez, asegurando que un mismo empleado no tenga asignados más de 5 pedidos.
@@ -173,6 +175,7 @@ end;
 --      Esto se debe a que ahora este error lo realizaría la base de datos utilizando el check. 
 --      Además, se debería incluir excepciones para tratar los casos de error del check.
 --      Una posible implementación podría ser:
+
 --      INICIO
 --          INTENTAR
 --              ACTUALIZAR personal_servicio 
@@ -188,6 +191,7 @@ end;
 --        FIN
 
 -- * P4.5 ¿Qué tipo de estrategia de programación has utilizado? ¿Cómo puede verse en tu código?
+
 --      Hemos utilizado una estrategia de programación defensiva con control de concurrencia.
 --      Esto se debe a que hemos utilizado un bloqueo pesimista usando el FOR UPDATE, como hemos explicado anteriormente.
 --      Además, tenemos una gestión estructurada de excepciones con el uso de  RAISE_APPLICATION_ERROR para el manejo de errores.
