@@ -279,6 +279,13 @@ begin
         WHEN OTHERS THEN
             DBMS_OUTPUT.PUT_LINE('Caso 4: Plato no disponible - OK');
     END;
+    -- Caso 6: Personal con pedidos máximos (-20003)
+    BEGIN
+        registrar_pedido(1, 2, 1, NULL);
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Caso 5: Personal con pedidos máximos - OK');
+    END;
 
   -- Idem para el resto de casos
 
