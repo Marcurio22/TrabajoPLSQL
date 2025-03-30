@@ -187,7 +187,11 @@ end;
 --            FIN SI
 --        FIN
 
--- * P4.5
+-- * P4.5 ¿Qué tipo de estrategia de programación has utilizado? ¿Cómo puede verse en tu código?
+--      Hemos utilizado una estrategia de programación defensiva con control de concurrencia.
+--      Esto se debe a que hemos utilizado un bloqueo pesimista usando el FOR UPDATE, como hemos explicado anteriormente.
+--      Además, tenemos una gestión estructurada de excepciones con el uso de  RAISE_APPLICATION_ERROR para el manejo de errores.
+--      Garantizamos la atomicidad usando ROLLBACK, en caso de error, o con el uso de COMMIT en caso de que el proceso haya sido correcto.
 -- 
 
 
