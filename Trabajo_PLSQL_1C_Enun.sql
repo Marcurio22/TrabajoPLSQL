@@ -139,7 +139,12 @@ end;
 
 ------ Deja aquí tus respuestas a las preguntas del enunciado:
 -- NO SE CORREGIRÁN RESPUESTAS QUE NO ESTÉN AQUÍ (utiliza el espacio que necesites apra cada una)
--- * P4.1
+-- * P4.1 ¿Cómo garantizas en tu código que un miembro del personal de servicio no supere el límite de pedidos activos?
+
+--      Para garantizar que se cumpla esta cuestión usamos un select que comprueba que la variable que controla el número de pedidos activos no sea mayor que 5. 
+--      Con fines de lograr esto, hemos puesto un mayor o igual en la comprobación para asegurarnos de que esta variable sea estrictamente menor que 5, 
+--		ya que, al empezar en 0, nos aseguramos de que con más de 5 pedidos se lance la excepción.
+--      Para mantener el contador actualizado, después de registrar el pedido actualizamos el contador pedidos_activos.
 --
 -- * P4.2
 --
