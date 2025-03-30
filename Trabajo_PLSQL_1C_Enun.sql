@@ -272,6 +272,14 @@ begin
         WHEN OTHERS THEN
             DBMS_OUTPUT.PUT_LINE('Caso 4: Pedido con plato inexistente - OK');
     END;
+    -- Caso 5: Pedido con un plato no disponible (-20001)
+    BEGIN
+        registrar_pedido(1, 1, 3, NULL);
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Caso 4: Plato no disponible - OK');
+    END;
+
   -- Idem para el resto de casos
 
   /* - Si se realiza un pedido vac´ıo (sin platos) devuelve el error -200002.
