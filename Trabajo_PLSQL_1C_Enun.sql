@@ -145,9 +145,17 @@ end;
 --      Con fines de lograr esto, hemos puesto un mayor o igual en la comprobación para asegurarnos de que esta variable sea estrictamente menor que 5, 
 --		ya que, al empezar en 0, nos aseguramos de que con más de 5 pedidos se lance la excepción.
 --      Para mantener el contador actualizado, después de registrar el pedido actualizamos el contador pedidos_activos.
---
--- * P4.2
---
+
+-- * P4.2 ¿Cómo evitas que dos transacciones concurrentes asignen un pedido al mismo personal de servicio cuyos pedidos activos estan a punto de superar el límite?
+--      En nuestro caso hemos elegido el bloqueo pesimista, porque tiene un enfoque que protege mejor la integridad de la base de datos frente a los errores al manejarlos 
+--      directamente en lugar de confiar en que sea improbable que sucedan. 
+--      Para realizar esta implementación hemos añadido un FOR UPDATE en el select evitando así que otro proceso acceda o modifique la misma fila a la vez. Esto nos permite 
+--      evitar tanto excedernos del límite de 5 por modificación simultánea como incosistencias en la base de datos.
+--      Otra opción diferente, podría haber sido emplear el bloqueo optimista que confía en que no se va a dar un caso en el que dos transacciones editen o accedan a la misma 
+--      fila en el mismo momento, pensando que es improbable que esto suceda.
+--      Para implementar este bloqueo habría que verificar que ninguna fila haya sido modificada, añadiendo la comprobación SQL%ROWCOUNT =0 después de verificar que pedidos_activos 
+--      no sea mayor que 5 y antes de lanzar la excepción.
+
 -- * P4.3
 --
 -- * P4.4
