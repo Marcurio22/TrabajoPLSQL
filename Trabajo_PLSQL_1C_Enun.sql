@@ -156,7 +156,12 @@ end;
 --      Para implementar este bloqueo habría que verificar que ninguna fila haya sido modificada, añadiendo la comprobación SQL%ROWCOUNT =0 después de verificar que pedidos_activos 
 --      no sea mayor que 5 y antes de lanzar la excepción.
 
--- * P4.3
+-- * P4.3 Una vez hechas las comprobaciones en los pasos 1 y 2, ¿podrías asegurar que el pedido se puede realizar de manera correcta en el paso 3 y no se generan inconsistencias? 
+--      ¿Por qué? Recuerda que trabajamos en entornos con conexiones concurrentes. 
+--      Podemos asegurar que el paso 3 se puede realizar sin inconsistencias, ya que, usamos el bloqueo pesimista como hemos indicado en el apartado anterior. El uso del FOR UPDATE 
+--      nos garantiza que dos transacciones simultáneas no puedan actualizar el contador pedidos_activos a la vez, asegurando que un mismo empleado no tenga asignados más de 5 pedidos.
+--      Además, hemos garantizado que en caso de que que suceda un error se ejecuta un ROLLBACK, en caso de que no haya error también cerramos las transacciones pero en este caso usando un COMMIT.
+--      Por último, el CHECK en pedidos_activos ayuda a evitar estados de datos inconsistetes.
 --
 -- * P4.4 Si modificásemos la tabla de personal_servicio añadiendo CHECK (pedido_activos <=5), ¿Qué implicaciones tendría en tu código? ¿Cómo afectaría en la gestión de excepciones? 
 --      Describe en detalle las modificaciones que deberías hacer en tu código para mejorar tu solución ante esta situación (puedes añadir pseudocódigo). 
