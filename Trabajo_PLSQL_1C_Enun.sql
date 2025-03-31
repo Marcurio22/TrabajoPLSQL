@@ -64,6 +64,9 @@ create or replace procedure registrar_pedido(
     plato_disponible INTEGER;
  begin
      -- Verificar disponibilidad del primer plato
+     --El SELECT comprueba que se haya añadido un arg_id_primer_plato. Después, comprueba que el plato este disponible. 
+     --En caso de que no este disponible se lanza el error -20001.
+
     IF arg_id_primer_plato IS NOT NULL THEN
         SELECT disponible INTO plato_disponible 
         FROM platos 
@@ -89,6 +92,9 @@ create or replace procedure registrar_pedido(
     END IF;   
     
      -- Verificar que el personal de servicio no tiene más de 5 pedidos activos
+     --Usamos un SELECT para ver el numero de pedidos activos para el empleado con el id_persona y bloqueamos la fila. 
+     --Si el número de pedidos es mayor o igual a 5 lanzamos el error -20003.
+
     SELECT pedidos_activos INTO numeros_pedidos_activos 
     FROM personal_servicio 
     WHERE id_personal = arg_id_personal
@@ -112,6 +118,7 @@ create or replace procedure registrar_pedido(
         FOR UPDATE;
     END IF;
     
+    --Insertamos el segundo plato y añadimos su precio al precio total, en caso de que el valor de arg_id_segundo_plato  no sea null.
     IF arg_id_segundo_plato IS NOT NULL THEN
         INSERT INTO detalle_pedido (id_pedido, id_plato, cantidad) VALUES (id_nuevo_pedido, arg_id_segundo_plato, 1);
         SELECT precio + precio_total_pedido INTO precio_total_pedido 
@@ -254,7 +261,10 @@ exec inicializa_test;
 create or replace procedure test_registrar_pedido is
 begin
 	 
-  --caso 1 Pedido correct, se realiza
+  --Caso 1 Pedido correct, se realiza
+  --Este test simula un escenario en el que se realiza un pedido correcto. 
+  --Si el pedido es correcto se muestra un OK por consola, en caso contrario se muestra ERROR
+
   BEGIN
     inicializa_test;
     registrar_pedido(1, 1, 1, 2);
@@ -265,6 +275,9 @@ begin
   END;
   
   -- Caso 2: Pedido sin platos (-20002)
+  --Este test simula un escenario en el que se intenta realizar un pedido sin seleccionar platos.  
+  --En caso de que se lance el mensaje de error -20002 muestra OK.
+
     BEGIN
         registrar_pedido(1, 1, NULL, NULL);
     EXCEPTION
@@ -290,14 +303,14 @@ begin
         registrar_pedido(1, 1, 3, NULL);
     EXCEPTION
         WHEN OTHERS THEN
-            DBMS_OUTPUT.PUT_LINE('Caso 4: Plato no disponible - OK');
+            DBMS_OUTPUT.PUT_LINE('Caso 5: Plato no disponible - OK');
     END;
     -- Caso 6: Personal con pedidos máximos (-20003)
     BEGIN
         registrar_pedido(1, 2, 1, NULL);
     EXCEPTION
         WHEN OTHERS THEN
-            DBMS_OUTPUT.PUT_LINE('Caso 5: Personal con pedidos máximos - OK');
+            DBMS_OUTPUT.PUT_LINE('Caso 6: Personal con pedidos máximos - OK');
     END;
 
   -- Idem para el resto de casos
