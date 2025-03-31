@@ -77,6 +77,8 @@ create or replace procedure registrar_pedido(
     END IF;
     
     -- Verificar disponibilidad del segundo plato
+    -- El SELECT comprobará que se haya añadido un arg_id_segundo_plato y que se encuentre disponible. 
+    -- En caso de no estarlo, se lanzará el error: -20001
     IF arg_id_segundo_plato IS NOT NULL THEN
         SELECT disponible INTO plato_disponible 
         FROM platos 
@@ -85,7 +87,7 @@ create or replace procedure registrar_pedido(
             RAISE_APPLICATION_ERROR(-20001, 'Uno de los platos seleccionados no está disponible.');
         END IF;
     END IF;
- 
+    
     -- Verificar que al menos un plato ha sido seleccionado
     IF arg_id_primer_plato IS NULL AND arg_id_segundo_plato IS NULL THEN
         RAISE_APPLICATION_ERROR(-20002, 'El pedido debe contener al menos un plato.');
@@ -104,6 +106,8 @@ create or replace procedure registrar_pedido(
     END IF;
     
     -- Crear el pedido
+    -- Se usa el SELECT de seq_pedido.NEXTVAL para asignar el siguiente valor de seq_Pedidos a id_nuevo_pedido. 
+    -- Con INSERT se agrega una nueva fila a la tabla pedidos con fecha actual y total inicial de 0.
     SELECT seq_pedidos.NEXTVAL INTO id_nuevo_pedido 
     FROM dual;
     INSERT INTO pedidos (id_pedido, id_cliente, id_personal, fecha_pedido, total) 
@@ -127,13 +131,17 @@ create or replace procedure registrar_pedido(
         FOR UPDATE;
     END IF;
     
-    -- Actualizar total del pedido
+    -- Actualizar total del pedido con el nuevo precio calculado.
     UPDATE pedidos SET total = precio_total_pedido WHERE id_pedido = id_nuevo_pedido;
 
     -- Actualizar contador de pedidos activos del personal
+    -- Incrementa en 1 el número de pedidos activos del miembro del personal asignado.
     UPDATE personal_servicio SET pedidos_activos = pedidos_activos + 1 WHERE id_personal = arg_id_personal;
 
-    COMMIT;
+    COMMIT; --Guardamos los cambios.
+    
+-- Con la excepción se lanza un error si uno de los platos no existe en la base de datos.
+-- Revierte los cambios y vuelve a lanzar el error en caso de cualquier otra excepción.
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
         RAISE_APPLICATION_ERROR(-20004, 'Uno de los platos seleccionados no existe.');
@@ -167,6 +175,7 @@ end;
 -- * P4.3 Una vez hechas las comprobaciones en los pasos 1 y 2, ¿podrías asegurar que el pedido se puede realizar de manera correcta en el paso 3 y no se generan inconsistencias? 
 
 --      ¿Por qué? Recuerda que trabajamos en entornos con conexiones concurrentes. 
+
 --      Podemos asegurar que el paso 3 se puede realizar sin inconsistencias, ya que, usamos el bloqueo pesimista como hemos indicado en el apartado anterior. El uso del FOR UPDATE 
 --      nos garantiza que dos transacciones simultáneas no puedan actualizar el contador pedidos_activos a la vez, asegurando que un mismo empleado no tenga asignados más de 5 pedidos.
 --      Además, hemos garantizado que en caso de que que suceda un error se ejecuta un ROLLBACK, en caso de que no haya error también cerramos las transacciones pero en este caso usando un COMMIT.
@@ -299,6 +308,9 @@ begin
             DBMS_OUTPUT.PUT_LINE('Caso 4: Pedido con plato inexistente - OK');
     END;
     -- Caso 5: Pedido con un plato no disponible (-20001)
+    -- Este test llama a registrar_pedido con un ID de plato que no está disponible. 
+    -- En la tabla platos, hay una columna disponible que puede ser 0 o 1. 
+    -- Registrar_pedido verifica este valor y lanza la excepción -20001 si el plato no está disponible en el sistema.
     BEGIN
         registrar_pedido(1, 1, 3, NULL);
     EXCEPTION
@@ -306,6 +318,8 @@ begin
             DBMS_OUTPUT.PUT_LINE('Caso 5: Plato no disponible - OK');
     END;
     -- Caso 6: Personal con pedidos máximos (-20003)
+    -- La tabla personal_servicio tiene una columna pedidos_activos con una restricción que limita los pedidos activos a 5. 
+    -- Registrar_pedido verifica este límite y lanza la excepción -20003 si un miembro del personal ya tiene el máximo de pedidos activos.
     BEGIN
         registrar_pedido(1, 2, 1, NULL);
     EXCEPTION
