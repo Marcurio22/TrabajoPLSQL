@@ -58,6 +58,7 @@ create or replace procedure registrar_pedido(
     arg_id_primer_plato INTEGER DEFAULT NULL,
     arg_id_segundo_plato INTEGER DEFAULT NULL
 ) is 
+-- Se han creado las variables necesarias para el código.
     id_nuevo_pedido INTEGER;
     precio_total_pedido DECIMAL(10,2) := 0;
     numeros_pedidos_activos INTEGER;
@@ -89,6 +90,7 @@ create or replace procedure registrar_pedido(
     END IF;
     
     -- Verificar que al menos un plato ha sido seleccionado
+    -- Mediante el IF comprobamos que las variables de los platos no son nulas y en caso de que si sean se lanza una excepción.
     IF arg_id_primer_plato IS NULL AND arg_id_segundo_plato IS NULL THEN
         RAISE_APPLICATION_ERROR(-20002, 'El pedido debe contener al menos un plato.');
     END IF;   
@@ -114,6 +116,7 @@ create or replace procedure registrar_pedido(
     VALUES (id_nuevo_pedido, arg_id_cliente, arg_id_personal, SYSDATE, 0);
     
     -- Insertar los platos en detalle_pedido y calcular el total
+    -- Se realiza un select para poder saber el precio del plato y poder añadirlo al total.
     IF arg_id_primer_plato IS NOT NULL THEN
         INSERT INTO detalle_pedido (id_pedido, id_plato, cantidad) VALUES (id_nuevo_pedido, arg_id_primer_plato, 1);
         SELECT precio INTO precio_total_pedido 
@@ -294,6 +297,8 @@ begin
             DBMS_OUTPUT.PUT_LINE('Caso 2: Pedido sin platos - OK');
     END;
   -- Caso 3: Pedido con un plato inexistente (-20004)
+  --Este test simula un caso en el que se intenta registrar un plato que no existe. 
+  --Y en caso de lanzar la excepción (-20004) pasara el test.
     BEGIN
         registrar_pedido(1, 1, 99, NULL);
     EXCEPTION
@@ -301,6 +306,8 @@ begin
             DBMS_OUTPUT.PUT_LINE('Caso 3: Plato inexistente - OK');
     END;
     -- Caso 4: Pedido con un plato válido y uno inexistente (-20004)
+    --Este test simula un caso en el que se intenta registrar un pedido con un plato que existe y es valido y otro que no existe. 
+    --Si se lanza la excepción(-20004) pasara el test.
     BEGIN
         registrar_pedido(1, 1, 1, 99);
     EXCEPTION
