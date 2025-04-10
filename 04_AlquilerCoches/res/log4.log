@@ -5997,3 +5997,54 @@ DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2
 INFO : [lsi.ubu.solucion.AlquilerCoches.ejecutarTests(AlquilerCoches.java:372)]2024-03-08 08:22:37.867 [main] AlquilerCoches - Caso alquiler correcto pero SI especifico la fecha final --------------
 INFO : [lsi.ubu.solucion.AlquilerCoches.ejecutarTests(AlquilerCoches.java:381)]2024-03-08 08:22:37.867 [main] AlquilerCoches - SI Coinciden la factura y las linea de factura OK
 INFO : [lsi.ubu.solucion.AlquilerCoches.main(AlquilerCoches.java:48)]2024-03-08 08:22:37.867 [main] AlquilerCoches - Fin de los tests
+INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:27)]2025-04-10 10:53:07.493 [main] AlquilerCoches - Comienzo de los tests
+ERROR: [lsi.ubu.util.ExecuteScript.run(ExecuteScript.java:59)]2025-04-10 10:53:07.520 [main] ExecuteScript - Cannot run program "sql/lanza_sqlplus.sh": error=13, Permiso denegado
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:38)]2025-04-10 10:53:07.715 [main] AlquilerCochesException - 
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:42)]2025-04-10 10:53:07.718 [main] AlquilerCochesException - java.base/java.lang.Thread.getStackTrace(Thread.java:2450)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:42)]2025-04-10 10:53:07.719 [main] AlquilerCochesException - lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:41)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:42)]2025-04-10 10:53:07.719 [main] AlquilerCochesException - lsi.ubu.servicios.ServicioImpl.alquilar(ServicioImpl.java:36)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:42)]2025-04-10 10:53:07.720 [main] AlquilerCochesException - lsi.ubu.tests.Tests.ejecutarTests(Tests.java:42)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:42)]2025-04-10 10:53:07.721 [main] AlquilerCochesException - lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:34)
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:48)]2025-04-10 10:53:07.722 [main] Tests - Nro de dias insuficiente MAL
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:09.712 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:09.718 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:68)]2025-04-10 10:53:09.719 [main] Tests - Alquilar vehiculo inexistente MAL no da excepcion
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:09.722 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:09.723 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:82)]2025-04-10 10:53:09.723 [main] Tests - Alquilar a cliente inexistente MAL no da excepcion
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:09.725 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:09.726 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+ERROR: [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:140)]2025-04-10 10:53:10.177 [main] Tests - ORA-06550: line 1, column 7:
+PLS-00201: identifier 'INICIALIZA_TEST' must be declared
+ORA-06550: line 1, column 7:
+PL/SQL: Statement ignored
+
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:10.188 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:10.189 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:192)]2025-04-10 10:53:10.193 [main] Tests - MAL Caso vehiculo ocupado solape de fechaIni levanta excepcion ORA-06550: line 1, column 7:
+PLS-00201: identifier 'INICIALIZA_TEST' must be declared
+ORA-06550: line 1, column 7:
+PL/SQL: Statement ignored
+
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:10.194 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:10.195 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:241)]2025-04-10 10:53:10.199 [main] Tests - MAL Caso vehiculo ocupado solape de fechaFin levanta excepcion ORA-06550: line 1, column 7:
+PLS-00201: identifier 'INICIALIZA_TEST' must be declared
+ORA-06550: line 1, column 7:
+PL/SQL: Statement ignored
+
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:10.201 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:10.202 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:292)]2025-04-10 10:53:10.205 [main] Tests - MAL Caso vehiculo ocupado intervalo del alquiler esta dentro de una reserva levanta excepcion levanta excepcion ORA-06550: line 1, column 7:
+PLS-00201: identifier 'INICIALIZA_TEST' must be declared
+ORA-06550: line 1, column 7:
+PL/SQL: Statement ignored
+
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:103)]2025-04-10 10:53:10.207 [main] PoolDeConexiones - Activacion de Autocommit=false
+DEBUG: [lsi.ubu.util.PoolDeConexiones.getConnection(PoolDeConexiones.java:111)]2025-04-10 10:53:10.208 [main] PoolDeConexiones - Activacion de Autocommit=false ::: Nivel de Aislamiento=TRANSACTION_READ_COMMITTED
+ERROR: [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:358)]2025-04-10 10:53:10.211 [main] Tests - ORA-06550: line 1, column 7:
+PLS-00201: identifier 'INICIALIZA_TEST' must be declared
+ORA-06550: line 1, column 7:
+PL/SQL: Statement ignored
+
+INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:36)]2025-04-10 10:53:10.214 [main] AlquilerCoches - Fin de los tests
