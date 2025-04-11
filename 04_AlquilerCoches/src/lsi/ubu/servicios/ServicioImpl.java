@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import lsi.ubu.excepciones.AlquilerCochesException;
 import lsi.ubu.util.PoolDeConexiones;
+import lsi.ubu.util.exceptions.SGBDError;
+import lsi.ubu.util.exceptions.oracle.OracleSGBDErrorUtil;
 
 public class ServicioImpl implements Servicio {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioImpl.class);
@@ -112,6 +114,12 @@ public class ServicioImpl implements Servicio {
 			if(null != con) {
 				con.rollback();
 			}
+			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED_DELETE)) {				
+                throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);			
+            }						
+            if (e instanceof AlquilerCochesException) {				
+                throw (AlquilerCochesException) e;			
+            }
 
 			LOGGER.debug(e.getMessage());
 
