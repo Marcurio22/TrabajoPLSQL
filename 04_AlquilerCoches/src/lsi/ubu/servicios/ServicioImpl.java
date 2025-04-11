@@ -24,7 +24,9 @@ public class ServicioImpl implements Servicio {
 		Connection con = null;
 		PreparedStatement st = null;
 		PreparedStatement selectNIFClientes = null;
+		PreparedStatement selectMatricula = null;
 		ResultSet rs = null;
+		ResultSet rsMatricula = null;
 
 		/*
 		 * El calculo de los dias se da hecho
@@ -85,7 +87,15 @@ public class ServicioImpl implements Servicio {
 			 if (!rs.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
 			 }
-			 
+			 selectMatricula = con.prepareStatement(				
+					 "SELECT matricula FROM vehiculos WHERE matricula= ?"			
+					);	
+			 selectMatricula =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
+			 selectMatricula.setString(1, nifCliente);
+			 rsMatricula = selectMatricula.executeQuery();
+			 if (!rsMatricula.next()) {
+				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);
+			 }
 			 con.commit();
 
 		} catch (SQLException e) {
