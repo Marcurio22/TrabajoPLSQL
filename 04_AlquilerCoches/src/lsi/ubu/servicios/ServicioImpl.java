@@ -77,8 +77,10 @@ public class ServicioImpl implements Servicio {
 			 
 			 java.sql.Date FechaIni = new java.sql.Date(fechaIni.getTime());
 			 st.setDate(3, FechaIni);
-			 java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
-			 st.setDate(4, FechaFin);
+			 if (fechaFin != null) {
+					java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
+					st.setDate(4, FechaFin);
+				}
 			 
 			 selectNIFClientes = con.prepareStatement(				
 					 "SELECT NIF FROM clientes WHERE NIF= ?"			
