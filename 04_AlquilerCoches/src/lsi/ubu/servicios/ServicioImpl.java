@@ -42,7 +42,7 @@ public class ServicioImpl implements Servicio {
 
 			/* A completar por el alumnado... */
 
-			/* ================================= AYUDA RÁPIDA ===========================*/
+			/* ================================= AYUDA Rï¿½PIDA ===========================*/
 			/*
 			 * Algunas de las columnas utilizan tipo numeric en SQL, lo que se traduce en
 			 * BigDecimal para Java.
@@ -62,9 +62,16 @@ public class ServicioImpl implements Servicio {
 			 * calcular sumando los dias de alquiler (ver variable DIAS_DE_ALQUILER) a la
 			 * fecha ini.
 			 */
+			
+			 con=pool.getConnection();
+			 st= con.prepareStatement("INSERT INTO Reservas (idReserva, nifCliente, matricula, fechaIni, fechaFin) VALUES (seq_reserva, ?, ?, ?, ?)");
+			 
+			 con.commit();
 
 		} catch (SQLException e) {
-			// Completar por el alumno
+			if(null != con) {
+				con.rollback();
+			}
 
 			LOGGER.debug(e.getMessage());
 
@@ -72,6 +79,12 @@ public class ServicioImpl implements Servicio {
 
 		} finally {
 			/* A rellenar por el alumnado*/
+			if(st != null) {
+				st.close();
+			}
+			if(con !=null) {
+				con.close();
+			}
 		}
 	}
 }
