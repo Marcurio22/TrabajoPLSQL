@@ -6097,3 +6097,36 @@ INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:36)]2025-04-10 10:53:10.
 =======
 INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:36)]2025-04-10 11:06:09.740 [main] AlquilerCoches - Fin de los tests
 >>>>>>> origin/JDBC
+INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:29)]2025-04-11 10:01:36.819 [main] AlquilerCoches - Comienzo de los tests
+ERROR: [lsi.ubu.util.ExecuteScript.run(ExecuteScript.java:59)]2025-04-11 10:01:36.826 [main] ExecuteScript - Cannot run program "sql/lanza_sqlplus.sh": error=13, Permiso denegado
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:50)]2025-04-11 10:01:36.910 [main] AlquilerCochesException - El número de días será mayor que cero
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:54)]2025-04-11 10:01:36.911 [main] AlquilerCochesException - java.base/java.lang.Thread.getStackTrace(Thread.java:2450)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:54)]2025-04-11 10:01:36.911 [main] AlquilerCochesException - lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:53)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:54)]2025-04-11 10:01:36.911 [main] AlquilerCochesException - lsi.ubu.servicios.ServicioImpl.alquilar(ServicioImpl.java:36)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:54)]2025-04-11 10:01:36.911 [main] AlquilerCochesException - lsi.ubu.tests.Tests.ejecutarTests(Tests.java:42)
+DEBUG: [lsi.ubu.excepciones.AlquilerCochesException.<init>(AlquilerCochesException.java:54)]2025-04-11 10:01:36.912 [main] AlquilerCochesException - lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:36)
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:46)]2025-04-11 10:01:36.912 [main] Tests - Nro de dias insuficiente OK
+DEBUG: [lsi.ubu.servicios.ServicioImpl.alquilar(ServicioImpl.java:76)]2025-04-11 10:01:37.348 [main] ServicioImpl - No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:73)]2025-04-11 10:01:37.349 [main] Tests - Alquilar vehiculo inexistente MAL
+DEBUG: [lsi.ubu.servicios.ServicioImpl.alquilar(ServicioImpl.java:76)]2025-04-11 10:01:37.353 [main] ServicioImpl - No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:87)]2025-04-11 10:01:37.353 [main] Tests - Alquilar a cliente inexistente MAL
+ERROR: [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:140)]2025-04-11 10:01:37.355 [main] Tests - No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:192)]2025-04-11 10:01:37.361 [main] Tests - MAL Caso vehiculo ocupado solape de fechaIni levanta excepcion No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:241)]2025-04-11 10:01:37.366 [main] Tests - MAL Caso vehiculo ocupado solape de fechaFin levanta excepcion No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:292)]2025-04-11 10:01:37.368 [main] Tests - MAL Caso vehiculo ocupado intervalo del alquiler esta dentro de una reserva levanta excepcion levanta excepcion No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+ERROR: [lsi.ubu.tests.Tests.ejecutarTests(Tests.java:358)]2025-04-11 10:01:37.371 [main] Tests - No se ha podido iniciar Universal Connection Pool: oracle.ucp.UniversalConnectionPoolException: No se puede obtener la conexión del origen de datos: java.sql.SQLException: Listener refused the connection with the following error:
+ORA-12505, TNS:listener does not currently know of SID given in connect descriptor
+ 
+INFO : [lsi.ubu.AlquilerCoches.main(AlquilerCoches.java:38)]2025-04-11 10:01:37.371 [main] AlquilerCoches - Fin de los tests
