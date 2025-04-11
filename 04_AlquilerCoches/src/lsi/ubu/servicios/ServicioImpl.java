@@ -64,13 +64,23 @@ public class ServicioImpl implements Servicio {
 			 */
 			
 			 con=pool.getConnection();
+			 
 			 st= con.prepareStatement("INSERT INTO Reservas (idReserva, nifCliente, matricula, fechaIni, fechaFin) VALUES (seq_reserva, ?, ?, ?, ?)");
+			 
 			 st.setString(1,nifCliente);
 			 st.setString(2, matricula);
+			 
 			 java.sql.Date FechaIni = new java.sql.Date(fechaIni.getTime());
 			 st.setDate(3, FechaIni);
 			 java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
 			 st.setDate(4, FechaFin);
+			 
+			 int nFilas= st.executeUpdate();
+			 
+			 if(nFilas==0) {
+				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
+			 }
+			 
 			 con.commit();
 
 		} catch (SQLException e) {
