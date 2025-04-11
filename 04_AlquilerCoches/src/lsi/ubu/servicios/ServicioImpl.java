@@ -116,7 +116,13 @@ public class ServicioImpl implements Servicio {
 			}
 			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED_DELETE)) {				
                 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);			
-            }						
+            }		
+			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED_DELETE)) {				
+                throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);			
+            }	
+			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED_DELETE)) {				
+                throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);			
+            }
             if (e instanceof AlquilerCochesException) {				
                 throw (AlquilerCochesException) e;			
             }
