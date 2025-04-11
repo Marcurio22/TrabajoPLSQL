@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,7 @@ public class ServicioImpl implements Servicio {
 
 		Connection con = null;
 		PreparedStatement st = null;
-		PreparedStatement selectNIFClientes = null;
+		Statement selectNIFClientes = null;
 		PreparedStatement selectMatricula = null;
 		PreparedStatement selectVehiculo = null;
 		ResultSet rs = null;
@@ -84,11 +85,9 @@ public class ServicioImpl implements Servicio {
 					st.setDate(4, FechaFin);
 				}
 			 
-			 selectNIFClientes = con.prepareStatement(				
-					 "SELECT NIF FROM clientes WHERE NIF= ?"			
-					);	
-			 selectNIFClientes.setString(1, nifCliente);
-			 rs = selectNIFClientes.executeQuery();
+			 selectNIFClientes = con.createStatement();	
+			 //selectNIFClientes.setString(1, nifCliente);
+			 rs = selectNIFClientes.executeQuery("SELECT NIF FROM clientes WHERE NIF= ?");
 			 if (!rs.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
 			 }
