@@ -25,8 +25,10 @@ public class ServicioImpl implements Servicio {
 		PreparedStatement st = null;
 		PreparedStatement selectNIFClientes = null;
 		PreparedStatement selectMatricula = null;
+		PreparedStatement selectVehiculo = null;
 		ResultSet rs = null;
 		ResultSet rsMatricula = null;
+		ResultSet rsVehiculo = null;
 
 		/*
 		 * El calculo de los dias se da hecho
@@ -81,7 +83,6 @@ public class ServicioImpl implements Servicio {
 			 selectNIFClientes = con.prepareStatement(				
 					 "SELECT NIF FROM clientes WHERE NIF= ?"			
 					);	
-			 selectNIFClientes =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
 			 selectNIFClientes.setString(1, nifCliente);
 			 rs = selectNIFClientes.executeQuery();
 			 if (!rs.next()) {
@@ -90,12 +91,19 @@ public class ServicioImpl implements Servicio {
 			 selectMatricula = con.prepareStatement(				
 					 "SELECT matricula FROM vehiculos WHERE matricula= ?"			
 					);	
-			 selectMatricula =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
-			 selectMatricula.setString(1, nifCliente);
+			 selectMatricula.setString(1, matricula);
 			 rsMatricula = selectMatricula.executeQuery();
 			 if (!rsMatricula.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);
 			 }
+			 selectVehiculo= con.prepareStatement(
+					 "SELECT matricula FROM reservas WHERE matricula= ?");
+			 selectVehiculo.setString(1, matricula);
+			 rsVehiculo = selectMatricula.executeQuery();
+			 if (rsVehiculo.next()) {
+				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);
+			 }
+			 
 			 con.commit();
 
 		} catch (SQLException e) {
