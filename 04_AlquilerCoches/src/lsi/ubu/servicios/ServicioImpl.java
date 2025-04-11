@@ -120,6 +120,15 @@ public class ServicioImpl implements Servicio {
 			if(st != null) {
 				st.close();
 			}
+			if(selectNIFClientes !=null) {
+				selectNIFClientes.close();
+			}
+			if(selectMatricula !=null) {
+				selectMatricula.close();
+			}
+			if(selectVehiculo !=null) {
+				selectVehiculo.close();
+			}
 			if(con !=null) {
 				con.close();
 			}
