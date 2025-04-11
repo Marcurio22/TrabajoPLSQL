@@ -75,9 +75,10 @@ public class ServicioImpl implements Servicio {
 			 java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
 			 st.setDate(4, FechaFin);
 			 
-			 int nFilas= st.executeUpdate();
-			 
-			 if(nFilas==0) {
+			 st =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
+			 st.setString(1, nifCliente);
+			 rs = st.executeQuery();
+			 if (!rs.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
 			 }
 			 
