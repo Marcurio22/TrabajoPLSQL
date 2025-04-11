@@ -23,6 +23,7 @@ public class ServicioImpl implements Servicio {
 
 		Connection con = null;
 		PreparedStatement st = null;
+		PreparedStatement selectNIFClientes = null;
 		ResultSet rs = null;
 
 		/*
@@ -75,9 +76,12 @@ public class ServicioImpl implements Servicio {
 			 java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
 			 st.setDate(4, FechaFin);
 			 
-			 st =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
-			 st.setString(1, nifCliente);
-			 rs = st.executeQuery();
+			 selectNIFClientes = con.prepareStatement(				
+					 "SELECT NIF FROM clientes WHERE NIF= ?"			
+					);	
+			 selectNIFClientes =con.prepareStatement("SELECT NIF FROM clientes WHERE NIF= ?");
+			 selectNIFClientes.setString(1, nifCliente);
+			 rs = selectNIFClientes.executeQuery();
 			 if (!rs.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
 			 }
