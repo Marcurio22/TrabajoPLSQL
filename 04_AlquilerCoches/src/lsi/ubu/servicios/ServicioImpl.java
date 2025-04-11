@@ -70,7 +70,7 @@ public class ServicioImpl implements Servicio {
 			
 			 con=pool.getConnection();
 			 
-			 st= con.prepareStatement("INSERT INTO Reservas (idReserva, nifCliente, matricula, fechaIni, fechaFin) VALUES (seq_reserva, ?, ?, ?, ?)");
+			 st= con.prepareStatement("INSERT INTO Reservas (idReserva, nifCliente, matricula, fechaIni, fechaFin) VALUES (seq_reservas.nextval, ?, ?, ?, ?)");
 			 
 			 st.setString(1,nifCliente);
 			 st.setString(2, matricula);
