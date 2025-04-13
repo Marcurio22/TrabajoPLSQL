@@ -102,7 +102,7 @@ public class ServicioImpl implements Servicio {
 			 selectVehiculo= con.prepareStatement(
 					 "SELECT matricula FROM reservas WHERE matricula= ?");
 			 selectVehiculo.setString(1, matricula);
-			 rsVehiculo = selectMatricula.executeQuery();
+			 rsVehiculo = selectVehiculo.executeQuery();
 			 if (rsVehiculo.next()) {
 				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);
 			 }
