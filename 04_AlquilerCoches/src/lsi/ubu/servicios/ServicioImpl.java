@@ -1,5 +1,6 @@
 package lsi.ubu.servicios;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,12 +27,19 @@ public class ServicioImpl implements Servicio {
 
 		Connection con = null;
 		PreparedStatement st = null;
-		Statement selectNIFClientes = null;
+		PreparedStatement selectNIFClientes = null;
 		PreparedStatement selectMatricula = null;
 		PreparedStatement selectVehiculo = null;
 		ResultSet rs = null;
 		ResultSet rsMatricula = null;
 		ResultSet rsVehiculo = null;
+		
+	    PreparedStatement insertFactura = null;
+	    PreparedStatement insertLinea = null;
+	    PreparedStatement insertLinea2 = null;
+	    PreparedStatement selectModelo = null;
+	    PreparedStatement selectCombustible = null;
+	    ResultSet rsModelo = null;
 
 		/*
 		 * El calculo de los dias se da hecho
@@ -71,82 +79,155 @@ public class ServicioImpl implements Servicio {
 			 * fecha ini.
 			 */
 			
-			 con=pool.getConnection();
-			 
-			 st= con.prepareStatement("INSERT INTO Reservas (idReserva, nifCliente, matricula, fechaIni, fechaFin) VALUES (seq_reservas.nextval, ?, ?, ?, ?)");
-			 
-			 st.setString(1,nifCliente);
-			 st.setString(2, matricula);
-			 
-			 java.sql.Date FechaIni = new java.sql.Date(fechaIni.getTime());
-			 st.setDate(3, FechaIni);
-			 if (fechaFin != null) {
-					java.sql.Date FechaFin = new java.sql.Date(fechaFin.getTime());
-					st.setDate(4, FechaFin);
-				}
-			 
-			 selectNIFClientes = con.createStatement();	
-			 //selectNIFClientes.setString(1, nifCliente);
-			 rs = selectNIFClientes.executeQuery("SELECT NIF FROM clientes WHERE NIF= ?");
-			 if (!rs.next()) {
-				 throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
-			 }
-			 selectMatricula = con.prepareStatement(				
-					 "SELECT matricula FROM vehiculos WHERE matricula= ?"			
-					);	
-			 selectMatricula.setString(1, matricula);
-			 rsMatricula = selectMatricula.executeQuery();
-			 if (!rsMatricula.next()) {
-				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);
-			 }
-			 selectVehiculo= con.prepareStatement(
-					 "SELECT matricula FROM reservas WHERE matricula= ?");
-			 selectVehiculo.setString(1, matricula);
-			 rsVehiculo = selectVehiculo.executeQuery();
-			 if (rsVehiculo.next()) {
-				 throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);
-			 }
-			 
-			 con.commit();
+			con.setAutoCommit(false);
+			
+			// Calcula fecha inicio y fecha fin
+	        java.sql.Date sqlFechaIni = new java.sql.Date(fechaIni.getTime());
+	        java.sql.Date sqlFechaFin;
+
+	        if (fechaFin != null) {
+	            sqlFechaFin = new java.sql.Date(fechaFin.getTime());
+	        } else {
+	        	sqlFechaFin = new java.sql.Date(fechaIni.getTime() + TimeUnit.DAYS.toMillis(DIAS_DE_ALQUILER));
+	        }
+	        
+			// Verifica existencia del cliente
+	        selectNIFClientes = con.prepareStatement("SELECT NIF FROM Clientes WHERE NIF = ?");
+	        selectNIFClientes.setString(1, nifCliente);
+	        rs = selectNIFClientes.executeQuery();
+	        if (!rs.next()) {
+	            throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);
+	        }
+			
+	        //Verificar existencia del vehículo
+			selectMatricula = con.prepareStatement("SELECT matricula FROM vehiculos WHERE matricula = ?");	
+			selectMatricula.setString(1, matricula);
+			rsMatricula = selectMatricula.executeQuery();
+			if (!rsMatricula.next()) {
+				throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);
+			}
+			
+			int idModelo = rsMatricula.getInt(1);
+			
+			
+	        
+			//Verifica que el vehículo está ocupado
+			selectVehiculo= con.prepareStatement("SELECT idReserva FROM reservas WHERE matricula = ? AND fecha_ini < ? AND fecha_fin >= ?");
+			selectVehiculo.setString(1, matricula);
+			selectVehiculo.setDate(2, sqlFechaFin);
+			selectVehiculo.setDate(3, sqlFechaIni);
+			rsVehiculo = selectVehiculo.executeQuery();
+			if (rsVehiculo.next()) {
+				throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);
+			}
+			
+			// Inserta la reserva
+	        st = con.prepareStatement(
+	            "INSERT INTO reservas (idReserva, cliente, matricula, fecha_ini, fecha_fin) VALUES (seq_reservas.nextval, ?, ?, ?, ?)");
+	        st.setString(1, nifCliente);
+	        st.setString(2, matricula);
+	        st.setDate(3, sqlFechaIni);
+	        st.setDate(4, sqlFechaFin);
+	        int Filas = st.executeUpdate();
+	        if (Filas == 0) {				
+	        	String mensaje = "La fila no se ha insertado correctamente.";
+	        	LOGGER.debug(mensaje);			
+			}
+	        
+	        // Obtener datos del modelo
+	        selectModelo = con.prepareStatement(
+	            "SELECT nombre, precio_cada_dia, capacidad_deposito, tipo_combustible FROM Modelos WHERE id_modelo = ?");
+	        selectModelo.setInt(1, idModelo);
+	        rsModelo = selectModelo.executeQuery();
+	        rsModelo.next();
+
+	        String nombreModelo = rsModelo.getString(1);
+	        BigDecimal precioDia = rsModelo.getBigDecimal(2);
+	        BigDecimal capacidadDeposito = rsModelo.getBigDecimal(3);
+	        String tipoCombustible = rsModelo.getString(4);
+	        
+	        // Obtener precio por litro
+	        selectCombustible = con.prepareStatement(
+	            "SELECT precio_por_litro FROM Precio_Combustible WHERE tipo_combustible = ?");
+	        selectCombustible.setString(1, tipoCombustible);
+	        ResultSet rsCombustible = selectCombustible.executeQuery();
+	        rsCombustible.next();
+	        BigDecimal precioLitro = rsCombustible.getBigDecimal(1);
+
+	        BigDecimal importeAlquiler = precioDia.multiply(BigDecimal.valueOf(diasDiff));
+	        BigDecimal importeDeposito = precioLitro.multiply(capacidadDeposito);
+	        BigDecimal total = importeAlquiler.add(importeDeposito);
+	        
+	        // Insert factura
+	        insertFactura = con.prepareStatement(
+	            "INSERT INTO Facturas (nroFactura, importe, cliente) VALUES (seq_facturas.nextval, ?, ?)",
+	            new String[] { "nroFactura" });
+	        insertFactura.setBigDecimal(1, total);
+	        insertFactura.setString(2, nifCliente);
+	        insertFactura.executeUpdate();
+	        
+	        // Obtener nroFactura generado
+	        ResultSet rsClave = insertFactura.getGeneratedKeys();
+	        rsClave.next();
+	        int nroFactura = rsClave.getInt(1);
+	        
+	        // Insert líneas de factura
+	        insertLinea = con.prepareStatement(
+	            "INSERT INTO Lineas_Factura (nroFactura, concepto, importe) VALUES (?, ?, ?)");
+	        insertLinea.setInt(1, nroFactura);
+	        insertLinea.setString(2, diasDiff + " dias de alquiler, vehiculo modelo " + nombreModelo);
+	        insertLinea.setBigDecimal(3, importeAlquiler);
+	        insertLinea.executeUpdate();
+
+	        insertLinea2 = con.prepareStatement(
+	            "INSERT INTO Lineas_Factura (nroFactura, concepto, importe) VALUES (?, ?, ?)");
+	        insertLinea2.setInt(1, nroFactura);
+	        insertLinea2.setString(2, "Deposito lleno de " + capacidadDeposito.intValue() + " litros de " + tipoCombustible);
+	        insertLinea2.setBigDecimal(3, importeDeposito);
+	        insertLinea2.executeUpdate();
+			
+			con.commit();
 
 		} catch (SQLException e) {
 			if(null != con) {
 				con.rollback();
 			}
-			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED)) {				
-                throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);			
-            }		
-			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED)) {				
-                throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);			
-            }	
-			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED)) {				
-                throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_OCUPADO);			
-            }
-            if (e instanceof AlquilerCochesException) {				
+			if (e instanceof AlquilerCochesException) {				
                 throw (AlquilerCochesException) e;			
-            }
+            }	  
+			
 
+			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED)) {	
+				
+                throw new AlquilerCochesException(AlquilerCochesException.CLIENTE_NO_EXIST);			
+            }
+			
+			if (new OracleSGBDErrorUtil().checkExceptionToCode(e, SGBDError.FK_VIOLATED)) {			
+				
+                throw new AlquilerCochesException(AlquilerCochesException.VEHICULO_NO_EXIST);			
+            }
+            
 			LOGGER.debug(e.getMessage());
 
 			throw e;
 
 		} finally {
 			/* A rellenar por el alumnado*/
-			if(st != null) {
-				st.close();
-			}
-			if(selectNIFClientes !=null) {
-				selectNIFClientes.close();
-			}
-			if(selectMatricula !=null) {
-				selectMatricula.close();
-			}
-			if(selectVehiculo !=null) {
-				selectVehiculo.close();
-			}
-			if(con !=null) {
-				con.close();
-			}
+			if (rs != null) rs.close();
+	        if (rsMatricula != null) rsMatricula.close();
+	        if (rsVehiculo != null) rsVehiculo.close();
+	        if (rsModelo != null) rsModelo.close();
+	        if (selectCombustible != null) selectCombustible.close();
+	        if (rs != null) rs.close();
+	        if (st != null) st.close();
+	        if (selectNIFClientes != null) selectNIFClientes.close();
+	        if (selectMatricula != null) selectMatricula.close();
+	        if (selectVehiculo != null) selectVehiculo.close();
+	        if (insertFactura != null) insertFactura.close();
+	        if (insertLinea != null) insertLinea.close();
+	        if (insertLinea2 != null) insertLinea2.close();
+	        if (selectModelo != null) selectModelo.close();
+	        if (con != null) con.close();
 		}
 	}
 }

@@ -64,7 +64,7 @@ public class Tests {
 		// caso 2 vehiculo inexistente
 		{
 			try {
-				servicio.alquilar("87654321Z", "9999-ZZZ", fechaIni, fechaFin);
+				servicio.alquilar("12345678A", "9999-ZZZ", fechaIni, fechaFin);
 				LOGGER.info("Alquilar vehiculo inexistente MAL no da excepcion");
 			} catch (SQLException e) {
 				if (e.getErrorCode() == AlquilerCochesException.VEHICULO_NO_EXIST) {
